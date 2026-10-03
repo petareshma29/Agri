@@ -1,0 +1,6 @@
+{
+  "name": "AgriRaksha",
+  "description": "Smart Agriculture Development System for farmers, crop health, AI disease detection, weather, and sustainable farming.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

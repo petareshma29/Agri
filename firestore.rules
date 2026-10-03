@@ -1,0 +1,74 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    // 1. Farmers
+    match /farmers/{farmerId} {
+      allow read: if true;
+      allow write: if isValidId(farmerId);
+    }
+
+    // 2. Crops
+    match /crops/{cropId} {
+      allow read: if true;
+      allow write: if isValidId(cropId);
+    }
+
+    // 3. Disease Scans
+    match /scans/{scanId} {
+      allow read: if true;
+      allow write: if isValidId(scanId);
+    }
+
+    // 4. Alerts
+    match /alerts/{alertId} {
+      allow read: if true;
+      allow write: if isValidId(alertId);
+    }
+
+    // 5. Feedback
+    match /feedback/{feedbackId} {
+      allow read: if true;
+      allow write: if isValidId(feedbackId);
+    }
+
+    // 6. Market Rates
+    match /marketRates/{rateId} {
+      allow read: if true;
+      allow write: if isValidId(rateId);
+    }
+
+    // 7. Weather
+    match /weather/{weatherId} {
+      allow read: if true;
+      allow write: if isValidId(weatherId);
+    }
+
+    // 8. Admins
+    match /admins/{adminId} {
+      allow read: if true;
+      allow write: if isValidId(adminId);
+    }
+
+    // 9. Test connection
+    match /test/{testId} {
+      allow read, write: if true;
+    }
+  }
+}

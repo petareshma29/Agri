@@ -1,0 +1,178 @@
+{
+  "entities": {
+    "Farmer": {
+      "title": "Farmer",
+      "description": "Registered farmer profile containing land, location, and agricultural details.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "farmer_id": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 120 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "aadhaar_number": { "type": "string", "maxLength": 20 },
+        "email": { "type": "string", "maxLength": 120 },
+        "village": { "type": "string", "maxLength": 100 },
+        "district": { "type": "string", "maxLength": 100 },
+        "state": { "type": "string", "maxLength": 100 },
+        "land_area": { "type": "string", "maxLength": 50 },
+        "soil_type": { "type": "string", "maxLength": 80 },
+        "irrigation_type": { "type": "string", "maxLength": 80 },
+        "joined_date": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "name", "phone"]
+    },
+    "Crop": {
+      "title": "Crop",
+      "description": "Cultivated crop entry linked to a farmer.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "farmer_id": { "type": "string", "maxLength": 128 },
+        "crop_name": { "type": "string", "maxLength": 80 },
+        "area": { "type": "string", "maxLength": 50 },
+        "stage": { "type": "string", "maxLength": 60 },
+        "health": { "type": "string", "maxLength": 60 },
+        "season": { "type": "string", "maxLength": 40 },
+        "status": { "type": "string", "maxLength": 50 },
+        "icon": { "type": "string", "maxLength": 10 },
+        "planting_date": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "farmer_id", "crop_name", "stage", "health"]
+    },
+    "CropScan": {
+      "title": "CropScan",
+      "description": "AI-detected disease diagnosis scan record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "farmer_id": { "type": "string", "maxLength": 128 },
+        "farmer_name": { "type": "string", "maxLength": 120 },
+        "crop_id": { "type": "string", "maxLength": 128 },
+        "detected_crop": { "type": "string", "maxLength": 80 },
+        "detected_condition": { "type": "string", "maxLength": 150 },
+        "confidence": { "type": "number" },
+        "symptoms": { "type": "array" },
+        "possible_causes": { "type": "array" },
+        "recommendations": { "type": "array" },
+        "preventive_steps": { "type": "array" },
+        "uncertainty_note": { "type": "string", "maxLength": 500 },
+        "created_at": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "farmer_id", "detected_crop", "detected_condition", "confidence"]
+    },
+    "Alert": {
+      "title": "Alert",
+      "description": "System-wide or farmer-specific agricultural notification.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "farmer_id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 150 },
+        "type": { "type": "string", "maxLength": 50 },
+        "message": { "type": "string", "maxLength": 500 },
+        "severity": { "type": "string", "enum": ["info", "warning", "urgent"] },
+        "status": { "type": "string", "enum": ["active", "read", "resolved"] },
+        "icon": { "type": "string", "maxLength": 10 },
+        "created_at": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "title", "type", "message", "severity", "status"]
+    },
+    "Feedback": {
+      "title": "Feedback",
+      "description": "Farmer suggestion and rating feedback.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "farmer_id": { "type": "string", "maxLength": 128 },
+        "farmer_name": { "type": "string", "maxLength": 120 },
+        "topic": { "type": "string", "maxLength": 60 },
+        "rating": { "type": "number" },
+        "message": { "type": "string", "maxLength": 1000 },
+        "created_at": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "farmer_id", "topic", "rating", "message"]
+    },
+    "MarketRate": {
+      "title": "MarketRate",
+      "description": "Market rate for APMC agricultural mandis.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "crop_name": { "type": "string", "maxLength": 80 },
+        "market_name": { "type": "string", "maxLength": 120 },
+        "district": { "type": "string", "maxLength": 100 },
+        "state": { "type": "string", "maxLength": 100 },
+        "rate": { "type": "number" },
+        "unit": { "type": "string", "maxLength": 30 },
+        "trend": { "type": "string", "enum": ["up", "down", "stable"] },
+        "date": { "type": "string", "maxLength": 50 },
+        "source": { "type": "string", "maxLength": 120 }
+      },
+      "required": ["id", "crop_name", "market_name", "rate"]
+    },
+    "WeatherData": {
+      "title": "WeatherData",
+      "description": "Regional weather record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "location": { "type": "string", "maxLength": 150 },
+        "temperature": { "type": "number" },
+        "condition": { "type": "string", "maxLength": 100 },
+        "humidity": { "type": "number" },
+        "rainfall": { "type": "string", "maxLength": 50 },
+        "wind_speed": { "type": "string", "maxLength": 50 },
+        "forecast_data": { "type": "string", "maxLength": 500 },
+        "recorded_at": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "location", "temperature"]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "AgriRaksha system administrator.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 120 },
+        "email": { "type": "string", "maxLength": 120 },
+        "role": { "type": "string", "enum": ["admin"] },
+        "created_at": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "name", "email", "role"]
+    }
+  },
+  "firestore": {
+    "/farmers/{farmerId}": {
+      "schema": "Farmer",
+      "description": "Stores farmer profiles and agricultural backgrounds."
+    },
+    "/crops/{cropId}": {
+      "schema": "Crop",
+      "description": "Stores individual crop details registered by farmers."
+    },
+    "/scans/{scanId}": {
+      "schema": "CropScan",
+      "description": "Stores AI disease detection scan history."
+    },
+    "/alerts/{alertId}": {
+      "schema": "Alert",
+      "description": "Stores weather, pest, and irrigation alerts."
+    },
+    "/feedback/{feedbackId}": {
+      "schema": "Feedback",
+      "description": "Stores feedback submissions from farmers."
+    },
+    "/marketRates/{rateId}": {
+      "schema": "MarketRate",
+      "description": "Stores APMC market rates."
+    },
+    "/weather/{weatherId}": {
+      "schema": "WeatherData",
+      "description": "Stores regional weather records."
+    },
+    "/admins/{adminId}": {
+      "schema": "Admin",
+      "description": "Stores authorized administrator IDs and profiles."
+    }
+  }
+}

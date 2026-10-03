@@ -1,0 +1,399 @@
+{
+  "users": [
+    {
+      "id": "U001",
+      "name": "AgriRaksha Administrator",
+      "email": "admin@agriraksha.demo",
+      "phone": "9999900000",
+      "password_hash": "$2b$10$iWj2n1u3vA3Wx.D.3XyFW.h4CP59eqWqQ51dGab2D028Gr0mxJ1aW",
+      "role": "admin",
+      "status": "active",
+      "created_at": "2026-01-10T10:00:00.000Z",
+      "updated_at": "2026-01-10T10:00:00.000Z"
+    },
+    {
+      "id": "U002",
+      "name": "Farm Operations Manager",
+      "email": "manager@agriraksha.demo",
+      "phone": "9999900001",
+      "password_hash": "$2b$10$9iJ6FoYSVIwAjYSQImd.6enbYt.fi9kvGIw5CK/eC/jgxbNOfkl8S",
+      "role": "admin",
+      "status": "active",
+      "created_at": "2026-01-15T10:00:00.000Z",
+      "updated_at": "2026-01-15T10:00:00.000Z"
+    },
+    {
+      "id": "U003",
+      "name": "Lakshmi",
+      "email": "ramesh@agriraksha.demo",
+      "phone": "9876543210",
+      "role": "farmer",
+      "status": "active",
+      "created_at": "2026-06-12T08:30:00.000Z",
+      "updated_at": "2026-06-12T08:30:00.000Z"
+    },
+    {
+      "id": "U004",
+      "name": "Sita Devi",
+      "email": "sita@agriraksha.demo",
+      "phone": "9123456780",
+      "role": "farmer",
+      "status": "active",
+      "created_at": "2026-05-20T09:15:00.000Z",
+      "updated_at": "2026-05-20T09:15:00.000Z"
+    }
+  ],
+  "farmers": [
+    {
+      "id": "F001",
+      "user_id": "U003",
+      "farmer_id": "F001",
+      "name": "Lakshmi",
+      "phone": "9876543210",
+      "aadhaar_number": "123456789012",
+      "email": "ramesh@agriraksha.demo",
+      "village": "Lakshmi Nagar",
+      "district": "Hyderabad",
+      "state": "Telangana",
+      "land_area": "4.5 acres",
+      "soil_type": "Loamy Soil",
+      "irrigation_type": "Drip Irrigation",
+      "joined_date": "12 June 2026",
+      "created_at": "2026-06-12T08:30:00.000Z",
+      "updated_at": "2026-06-12T08:30:00.000Z"
+    },
+    {
+      "id": "F002",
+      "user_id": "U004",
+      "farmer_id": "F002",
+      "name": "Sita Devi",
+      "phone": "9123456780",
+      "aadhaar_number": "234567890123",
+      "email": "sita@agriraksha.demo",
+      "village": "Green Valley",
+      "district": "Warangal",
+      "state": "Telangana",
+      "land_area": "3 acres",
+      "soil_type": "Red Loamy Soil",
+      "irrigation_type": "Sprinkler",
+      "joined_date": "20 May 2026",
+      "created_at": "2026-05-20T09:15:00.000Z",
+      "updated_at": "2026-05-20T09:15:00.000Z"
+    }
+  ],
+  "crops": [
+    {
+      "id": "C001",
+      "farmer_id": "F001",
+      "crop_name": "Rice",
+      "area": "2 acres",
+      "stage": "Flowering",
+      "health": "Healthy",
+      "season": "Kharif",
+      "status": "Good",
+      "icon": "🌾",
+      "planting_date": "2026-06-15",
+      "created_at": "2026-06-15T08:00:00.000Z",
+      "updated_at": "2026-09-20T10:00:00.000Z"
+    },
+    {
+      "id": "C002",
+      "farmer_id": "F001",
+      "crop_name": "Cotton",
+      "area": "1.5 acres",
+      "stage": "Vegetative",
+      "health": "Healthy",
+      "season": "Kharif",
+      "status": "Good",
+      "icon": "🌿",
+      "planting_date": "2026-06-25",
+      "created_at": "2026-06-25T08:00:00.000Z",
+      "updated_at": "2026-09-18T14:30:00.000Z"
+    },
+    {
+      "id": "C003",
+      "farmer_id": "F001",
+      "crop_name": "Tomato",
+      "area": "1 acre",
+      "stage": "Fruit Development",
+      "health": "Needs Monitoring",
+      "season": "Rabi",
+      "status": "Monitor",
+      "icon": "🍅",
+      "planting_date": "2026-07-10",
+      "created_at": "2026-07-10T08:00:00.000Z",
+      "updated_at": "2026-09-22T16:45:00.000Z"
+    },
+    {
+      "id": "C004",
+      "farmer_id": "F002",
+      "crop_name": "Maize",
+      "area": "1.5 acres",
+      "stage": "Vegetative",
+      "health": "Healthy",
+      "season": "Kharif",
+      "status": "Good",
+      "icon": "🌽",
+      "planting_date": "2026-06-18",
+      "created_at": "2026-06-18T08:00:00.000Z",
+      "updated_at": "2026-09-21T09:00:00.000Z"
+    },
+    {
+      "id": "C005",
+      "farmer_id": "F002",
+      "crop_name": "Chilli",
+      "area": "1.5 acres",
+      "stage": "Flowering",
+      "health": "Healthy",
+      "season": "Rabi",
+      "status": "Good",
+      "icon": "🌶️",
+      "planting_date": "2026-07-05",
+      "created_at": "2026-07-05T08:00:00.000Z",
+      "updated_at": "2026-09-23T11:20:00.000Z"
+    },
+    {
+      "farmer_id": "F001",
+      "crop_name": "Groundnut",
+      "area": "2.5 acres",
+      "stage": "Pod Development",
+      "health": "Healthy",
+      "season": "Kharif",
+      "status": "Good",
+      "icon": "🥜",
+      "planting_date": "2026-09-24",
+      "id": "C006",
+      "created_at": "2026-09-24T05:29:24.925Z",
+      "updated_at": "2026-09-24T05:29:24.925Z"
+    }
+  ],
+  "crop_scans": [
+    {
+      "id": "S001",
+      "farmer_id": "F001",
+      "farmer_name": "Lakshmi",
+      "crop_id": "C001",
+      "detected_crop": "Rice",
+      "detected_condition": "Rice Blast (Magnaporthe oryzae)",
+      "confidence": 89,
+      "symptoms": [
+        "Spindle-shaped brown lesions on leaves",
+        "Ash-grey centers with dark brown borders"
+      ],
+      "possible_causes": [
+        "Prolonged leaf wetness",
+        "Excess nitrogen application"
+      ],
+      "recommendations": [
+        "Use only a crop-registered fungicide recommended by your local agriculture authority (e.g., tricyclazole).",
+        "Follow the product label and protective-equipment instructions."
+      ],
+      "preventive_steps": [
+        "Maintain balanced nitrogen fertilization.",
+        "Improve field drainage and sanitation."
+      ],
+      "uncertainty_note": "AI assistance result. Consult local Krishi Vigyan Kendra (KVK) or agriculture department.",
+      "created_at": "2026-09-21T14:32:00.000Z"
+    },
+    {
+      "id": "S002",
+      "farmer_id": "F001",
+      "farmer_name": "Lakshmi",
+      "crop_id": "C003",
+      "detected_crop": "Tomato",
+      "detected_condition": "Early Blight (Alternaria solani)",
+      "confidence": 91,
+      "symptoms": [
+        "Concentric dark rings (target board pattern)",
+        "Yellowing around older lower leaves"
+      ],
+      "possible_causes": [
+        "High humidity",
+        "Warm temperatures with frequent rainfall splashing"
+      ],
+      "recommendations": [
+        "Apply an approved copper-based or chlorothalonil fungicide registered for tomatoes.",
+        "Confirm registration and application safety precautions."
+      ],
+      "preventive_steps": [
+        "Remove infected lower leaves to improve air circulation.",
+        "Use straw or plastic mulch to prevent soil splashing onto foliage."
+      ],
+      "uncertainty_note": "AI assistance estimate. Follow pesticide label directions.",
+      "created_at": "2026-09-23T10:15:00.000Z"
+    }
+  ],
+  "alerts": [
+    {
+      "id": "A001",
+      "farmer_id": "F001",
+      "title": "Weather & Drainage Notice",
+      "type": "Weather",
+      "message": "Rain is expected. Check drainage around the rice field.",
+      "severity": "warning",
+      "status": "active",
+      "icon": "🌦️",
+      "created_at": "2026-09-23T06:00:00.000Z"
+    },
+    {
+      "id": "A002",
+      "farmer_id": "F001",
+      "title": "Crop Scouting Reminder",
+      "type": "Crop",
+      "message": "Tomato field should be inspected for leaf spots.",
+      "severity": "warning",
+      "status": "active",
+      "icon": "🔎",
+      "created_at": "2026-09-22T08:00:00.000Z"
+    },
+    {
+      "id": "A003",
+      "farmer_id": "F001",
+      "title": "Irrigation Schedule",
+      "type": "Irrigation",
+      "message": "Cotton irrigation is due tomorrow morning.",
+      "severity": "info",
+      "status": "active",
+      "icon": "💧",
+      "created_at": "2026-09-23T12:00:00.000Z"
+    },
+    {
+      "id": "A004",
+      "farmer_id": "F002",
+      "title": "Nutrient Application",
+      "type": "Task",
+      "message": "Apply the planned nutrient schedule after checking soil moisture.",
+      "severity": "info",
+      "status": "active",
+      "icon": "📋",
+      "created_at": "2026-09-23T07:30:00.000Z"
+    },
+    {
+      "id": "A005",
+      "title": "PM-KISAN Seasonal Verification",
+      "type": "Scheme",
+      "message": "Official e-KYC update deadline reminder for registered farmers.",
+      "severity": "info",
+      "status": "active",
+      "icon": "🏦",
+      "created_at": "2026-09-20T10:00:00.000Z"
+    }
+  ],
+  "feedback": [
+    {
+      "id": "FB001",
+      "farmer_id": "F001",
+      "farmer_name": "Lakshmi",
+      "topic": "crop",
+      "rating": 5,
+      "message": "The AI crop scanner provided clear suggestions and helped identify leaf spots quickly.",
+      "created_at": "2026-09-22T16:00:00.000Z"
+    },
+    {
+      "id": "FB002",
+      "farmer_id": "F002",
+      "farmer_name": "Sita Devi",
+      "topic": "language",
+      "rating": 5,
+      "message": "Telugu language support is very clear and easy to navigate on mobile phone.",
+      "created_at": "2026-09-23T11:45:00.000Z"
+    }
+  ],
+  "market_rates": [
+    {
+      "id": "M001",
+      "crop_name": "Tomato",
+      "market_name": "Bowenpally Agricultural Market",
+      "district": "Hyderabad",
+      "state": "Telangana",
+      "rate": 3500,
+      "unit": "quintal",
+      "trend": "up",
+      "date": "2026-09-23",
+      "source": "Telangana Agricultural Marketing Dept (Indicative Mandi Watch)"
+    },
+    {
+      "id": "M002",
+      "crop_name": "Rice (Paddy Common)",
+      "market_name": "Warangal Grain Market",
+      "district": "Warangal",
+      "state": "Telangana",
+      "rate": 2350,
+      "unit": "quintal",
+      "trend": "stable",
+      "date": "2026-09-23",
+      "source": "MSP / Regional Mandi Bulletin"
+    },
+    {
+      "id": "M003",
+      "crop_name": "Onion",
+      "market_name": "Mahbubnagar Market Yard",
+      "district": "Mahbubnagar",
+      "state": "Telangana",
+      "rate": 1500,
+      "unit": "quintal",
+      "trend": "down",
+      "date": "2026-09-23",
+      "source": "Daily Vegetable Market Arrival Reports"
+    },
+    {
+      "id": "M004",
+      "crop_name": "Maize",
+      "market_name": "Nizamabad Agricultural Market",
+      "district": "Nizamabad",
+      "state": "Telangana",
+      "rate": 2050,
+      "unit": "quintal",
+      "trend": "stable",
+      "date": "2026-09-23",
+      "source": "Grain Mandi Indices"
+    },
+    {
+      "id": "M005",
+      "crop_name": "Chilli (Dry Red)",
+      "market_name": "Khammam APMC Market",
+      "district": "Khammam",
+      "state": "Telangana",
+      "rate": 12500,
+      "unit": "quintal",
+      "trend": "up",
+      "date": "2026-09-23",
+      "source": "Spices Board & APMC Khammam"
+    },
+    {
+      "id": "M006",
+      "crop_name": "Cotton",
+      "market_name": "Adilabad Cotton Yard",
+      "district": "Adilabad",
+      "state": "Telangana",
+      "rate": 7200,
+      "unit": "quintal",
+      "trend": "stable",
+      "date": "2026-09-23",
+      "source": "Cotton Corporation of India Indicative Yard Rates"
+    }
+  ],
+  "weather_records": [
+    {
+      "id": "W001",
+      "location": "Telangana Agricultural Zone (Hyderabad & Warangal)",
+      "temperature": 29,
+      "condition": "Partly Cloudy",
+      "humidity": 65,
+      "rainfall": "10% chance",
+      "wind_speed": "14 km/h",
+      "forecast_data": "Scattered cloud cover with light showers expected over select districts within 48 hours.",
+      "recorded_at": "2026-09-23T18:00:00.000Z"
+    }
+  ],
+  "chatbot_conversations": [
+    {
+      "id": "CB001",
+      "farmer_id": "F001",
+      "user_message": "What should I do for my crops today?",
+      "ai_response": "Check irrigation and soil moisture for your Rice and Cotton fields. Walk the tomato field to inspect leaves for any early spots.",
+      "created_at": "2026-09-23T09:00:00.000Z"
+    }
+  ],
+  "otps": []
+}
