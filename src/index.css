@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "./glassmorphism.css";
 
 :root {
   --green: #0f6b3b;
@@ -50,7 +49,6 @@ button {
   align-items: center;
   justify-content: space-between;
   background: #064d35;
-  backdrop-filter: blur(14px);
   border-bottom: 2px solid rgba(217,255,120,.42);
   box-shadow: 0 8px 28px rgba(3,25,13,.30);
 }
@@ -453,18 +451,6 @@ button {
   color: white;
 }
 
-.quick-login-panel {
-  width: 100%;
-  padding: 24px 20px;
-  border-radius: 18px;
-  background: rgba(245,255,248,.94);
-  color: #0c5b38;
-  border: 1px solid #bfe2ca;
-  box-shadow: 0 14px 35px rgba(0,0,0,.22);
-  backdrop-filter: blur(10px);
-  text-align: center;
-}
-
 .quick-login-icon {
   font-size: 30px;
   margin-bottom: 2px;
@@ -473,12 +459,6 @@ button {
 .quick-login-title {
   font-size: 24px;
   font-weight: 900;
-}
-
-.quick-login-panel p {
-  font-size: 13px;
-  color: #476c5a;
-  margin: 4px 0 16px;
 }
 
 .quick-login-btn {
@@ -509,6 +489,159 @@ button {
 .quick-login-btn strong {
   margin-left: auto;
   font-size: 20px;
+}
+
+.quick-login-panel {
+  width: 100%;
+  max-width: 410px;
+  padding: 22px 20px;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #0c5b38;
+  border: 1px solid #d1fae5;
+  box-shadow: 0 16px 36px rgba(12, 43, 24, 0.22);
+  text-align: left;
+}
+
+.quick-sign-tabs {
+  display: flex;
+  background: #eaf5ee;
+  border-radius: 10px;
+  padding: 3px;
+  margin-bottom: 14px;
+  gap: 4px;
+}
+
+.quick-sign-tab {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  border: 0;
+  background: transparent;
+  color: #3f6853;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.quick-sign-tab.active {
+  background: #ffffff;
+  color: #0c5b38;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.quick-sign-input-wrap {
+  display: flex;
+  align-items: center;
+  background: #f1f7f3;
+  border: 1.5px solid #c2e2cc;
+  border-radius: 12px;
+  padding: 6px 12px;
+  margin: 10px 0 8px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.quick-sign-input-wrap:focus-within {
+  border-color: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+  background: #ffffff;
+}
+
+.quick-sign-flag {
+  font-size: 13px;
+  font-weight: 800;
+  color: #274b37;
+  padding-right: 8px;
+  border-right: 1px solid #c2e2cc;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.quick-sign-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f2c1c;
+  outline: none;
+  width: 100%;
+}
+
+.quick-sign-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.quick-sign-chip {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #eef7f0;
+  border: 1px solid #cde5d4;
+  color: #1d5f39;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.quick-sign-chip:hover {
+  background: #d8edd0;
+  border-color: #16a34a;
+}
+
+.quick-sign-btn-action {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.quick-sign-btn-action:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(22, 163, 74, 0.45);
+}
+
+.quick-sign-btn-action:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.quick-sign-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.quick-sign-otp-wrap {
+  margin-top: 10px;
+  padding: 12px;
+  background: #f4faf6;
+  border: 1px dashed #86efac;
+  border-radius: 12px;
 }
 
 .quick-login-btn.farmer {

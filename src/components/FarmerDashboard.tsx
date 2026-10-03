@@ -354,19 +354,6 @@ export const FarmerDashboard: React.FC<FarmerDashboardProps> = ({
         </a>
 
         <div className="nav-right">
-          <button
-            type="button"
-            className="nav-btn"
-            style={{
-              background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.35), rgba(56, 189, 248, 0.35))',
-              borderColor: 'rgba(96, 165, 250, 0.6)',
-              color: '#dbeafe',
-              fontWeight: 900
-            }}
-            onClick={() => onNavigate('glassmorphism')}
-          >
-            ✨ Glassmorphism UI
-          </button>
           <div className="language-switcher">
             <button className="lang-btn" type="button" onClick={() => setLangMenuOpen(!langMenuOpen)}>
               🌐 <span>{lang === 'te' ? 'తెలుగు' : 'English'}</span> ▾

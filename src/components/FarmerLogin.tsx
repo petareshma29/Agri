@@ -36,20 +36,31 @@ export const FarmerLogin: React.FC<FarmerLoginProps> = ({
     setIdentifier(m === 'phone' ? '9876543210' : 'ramesh@agriraksha.demo');
   };
 
+  const handlePhoneChange = (val: string) => {
+    const cleanDigits = val.replace(/\D/g, '').slice(0, 10);
+    setIdentifier(cleanDigits);
+    setError(null);
+  };
+
   const handleSend = async () => {
     setError(null);
-    if (!identifier.trim()) {
+    const clean = identifier.trim();
+    if (!clean) {
       setError(lang === 'te' ? 'దయచేసి మీ వివరాలను నమోదు చేయండి.' : 'Please enter your details.');
+      return;
+    }
+    if (method === 'phone' && clean.replace(/\D/g, '').length < 10) {
+      setError(lang === 'te' ? 'దయచేసి సరైన 10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి.' : 'Please enter a valid 10-digit mobile number.');
       return;
     }
 
     setLoading(true);
     try {
-      const res = await api.farmerLogin(method, identifier.trim());
+      const res = await api.farmerLogin(method, clean);
       if (method === 'phone') {
         setReceivedDevOtp(res.devOtp || '123456');
         setShowOtpBox(true);
-        showToast(lang === 'te' ? `OTP పంపబడింది!` : `OTP sent to ${identifier}!`);
+        showToast(lang === 'te' ? `+91 ${clean} కు OTP పంపబడింది!` : `OTP sent to +91 ${clean}!`);
       } else {
         // Direct email login succeeded
         if (res.token && res.farmer) {
@@ -161,42 +172,126 @@ export const FarmerLogin: React.FC<FarmerLoginProps> = ({
                 <label>
                   {method === 'phone' ? t.registeredPhone : (lang === 'te' ? 'నమోదైన ఈమెయిల్ చిరునామా' : 'Registered Email Address')}
                 </label>
-                <input
-                  type={method === 'phone' ? 'tel' : 'email'}
-                  value={identifier}
-                  placeholder={method === 'phone' ? t.enter10DigitPhone : 'ramesh@agriraksha.demo'}
-                  onChange={e => setIdentifier(e.target.value)}
-                  onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}
-                />
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  {method === 'phone' && (
+                    <span style={{
+                      padding: '10px 12px',
+                      background: '#e2e8f0',
+                      borderRadius: '8px 0 0 8px',
+                      fontWeight: 800,
+                      color: '#334155',
+                      fontSize: '14px',
+                      border: '1px solid #cbd5e1',
+                      borderRight: 'none'
+                    }}>
+                      🇮🇳 +91
+                    </span>
+                  )}
+                  <input
+                    type={method === 'phone' ? 'tel' : 'email'}
+                    value={identifier}
+                    placeholder={method === 'phone' ? t.enter10DigitPhone : 'ramesh@agriraksha.demo'}
+                    onChange={e => {
+                      if (method === 'phone') handlePhoneChange(e.target.value);
+                      else setIdentifier(e.target.value);
+                    }}
+                    onKeyDown={e => { if (e.key === 'Enter') { if (!showOtpBox) handleSend(); else handleVerifyOtp(); } }}
+                    style={method === 'phone' ? { borderRadius: '0 8px 8px 0' } : {}}
+                    disabled={showOtpBox && method === 'phone'}
+                  />
+                </div>
+                {method === 'phone' && !showOtpBox && (
+                  <small style={{ color: '#15803d', fontWeight: 700, marginTop: '5px', display: 'block' }}>
+                    🔒 {lang === 'te' ? 'మీ మొబైల్ నంబర్‌కు OTP పంపబడుతుంది' : 'An OTP will be sent to your mobile number'}
+                  </small>
+                )}
               </div>
-              <button className="primary" onClick={handleSend} disabled={loading}>
-                {loading ? 'Please wait...' : (method === 'phone' ? t.sendOtp : (lang === 'te' ? 'ధృవీకరించి లాగిన్' : 'Verify & Login'))}
-              </button>
+
+              {!showOtpBox && (
+                <button
+                  type="button"
+                  className="primary"
+                  onClick={handleSend}
+                  disabled={loading}
+                  style={{ width: '100%', fontWeight: 800 }}
+                >
+                  {loading ? (lang === 'te' ? 'దయచేసి వేచి ఉండండి...' : 'Please wait...') : (
+                    method === 'phone' ? `✉️ ${lang === 'te' ? 'OTP పొందండి' : 'Send OTP'}` : (lang === 'te' ? 'ధృవీకరించి లాగిన్' : 'Verify & Login')
+                  )}
+                </button>
+              )}
             </div>
 
             {showOtpBox && (
-              <div className="otp-box show" style={{ display: 'block' }}>
+              <div className="otp-box show" style={{ display: 'block', marginTop: '14px' }}>
                 <b>{t.demoOtpSent}</b>
-                <div className="otp-code">{receivedDevOtp}</div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '12px',
+                  margin: '8px 0'
+                }}>
+                  <div className="otp-code" style={{ margin: 0 }}>{receivedDevOtp}</div>
+                  <button
+                    type="button"
+                    onClick={() => setOtpInput(receivedDevOtp || '123456')}
+                    style={{
+                      border: '1px solid #16a34a',
+                      background: '#ffffff',
+                      color: '#15803d',
+                      fontSize: '12px',
+                      fontWeight: 800,
+                      borderRadius: '6px',
+                      padding: '4px 10px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {lang === 'te' ? 'ఆటో-ఫిల్' : 'Auto-Fill'}
+                  </button>
+                </div>
                 <small>{t.demoOtpNote}</small>
-                <div className="field" style={{ marginTop: '12px' }}>
+
+                <div className="field" style={{ marginTop: '14px' }}>
                   <label>{t.enterOtp}</label>
                   <input
                     maxLength={6}
-                    placeholder="6-digit OTP"
+                    placeholder="Enter 6-digit OTP (e.g. 123456)"
                     value={otpInput}
-                    onChange={e => setOtpInput(e.target.value)}
+                    onChange={e => setOtpInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
                     onKeyDown={e => { if (e.key === 'Enter') handleVerifyOtp(); }}
+                    autoFocus
+                    style={{ letterSpacing: '4px', fontSize: '18px', textAlign: 'center', fontWeight: 800 }}
                   />
                 </div>
-                <button
-                  className="primary"
-                  style={{ marginTop: '10px' }}
-                  onClick={handleVerifyOtp}
-                  disabled={loading}
-                >
-                  {loading ? 'Verifying...' : t.verifyContinue}
-                </button>
+
+                <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                  <button
+                    type="button"
+                    className="primary"
+                    style={{ flex: 1, fontWeight: 800 }}
+                    onClick={handleVerifyOtp}
+                    disabled={loading}
+                  >
+                    {loading ? (lang === 'te' ? 'ధృవీకరిస్తోంది...' : 'Verifying...') : `🔓 ${t.verifyContinue}`}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setShowOtpBox(false); setOtpInput(''); }}
+                    style={{
+                      padding: '10px 14px',
+                      borderRadius: '8px',
+                      border: '1px solid #cbd5e1',
+                      background: '#ffffff',
+                      color: '#475569',
+                      fontWeight: 700,
+                      fontSize: '13px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {lang === 'te' ? 'మార్చండి' : 'Change'}
+                  </button>
+                </div>
               </div>
             )}
 

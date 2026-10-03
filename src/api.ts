@@ -67,6 +67,12 @@ export const api = {
       body: JSON.stringify({ identifier, otp })
     }),
 
+  quickPhoneLogin: (phone: string, name?: string) =>
+    request<{ success: boolean; message: string; isNewAccount?: boolean; token: string; farmer: Farmer }>('/api/auth/farmer/quick-phone-login', {
+      method: 'POST',
+      body: JSON.stringify({ phone, name })
+    }),
+
   adminLogin: (email: string, password: string) =>
     request<{ success: boolean; token: string; admin: AdminUser }>('/api/auth/admin/login', {
       method: 'POST',

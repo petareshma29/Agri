@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { translations } from '../translations.ts';
-import { api } from '../api.ts';
+import { api, setStoredAuth } from '../api.ts';
+import { Farmer } from '../types.ts';
 
 interface HomeProps {
   lang: 'en' | 'te';
   setLang: (l: 'en' | 'te') => void;
   onNavigate: (route: string) => void;
   showToast: (msg: string) => void;
+  onLoginSuccess?: (farmer: Farmer) => void;
 }
 
 const IMAGES = [
@@ -15,11 +17,20 @@ const IMAGES = [
   '/assets/bg-tractor-field.jpg'
 ];
 
-export const Home: React.FC<HomeProps> = ({ lang, setLang, onNavigate, showToast }) => {
+export const Home: React.FC<HomeProps> = ({ lang, setLang, onNavigate, showToast, onLoginSuccess }) => {
   const t = translations[lang];
   const [slideIndex, setSlideIndex] = useState(0);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Phone Sign-in with OTP State
+  const [quickPhone, setQuickPhone] = useState('9876543210');
+  const [quickOtp, setQuickOtp] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [receivedOtp, setReceivedOtp] = useState<string | null>(null);
+  const [quickPhoneLoading, setQuickPhoneLoading] = useState(false);
+  const [quickError, setQuickError] = useState<string | null>(null);
+  const [quickTab, setQuickTab] = useState<'phone' | 'admin'>('phone');
 
   // Disease upload demo state on home page
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -39,16 +50,66 @@ export const Home: React.FC<HomeProps> = ({ lang, setLang, onNavigate, showToast
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Slider auto timer - automatically changes every 2.5 seconds (between 2 and 3 seconds)
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setSlideIndex(prev => (prev + 1) % IMAGES.length);
-    }, 2500);
-    return () => clearInterval(timer);
-  }, []);
-
   const nextSlide = () => setSlideIndex(prev => (prev + 1) % IMAGES.length);
   const prevSlide = () => setSlideIndex(prev => (prev - 1 + IMAGES.length) % IMAGES.length);
+
+  const handlePhoneInputChange = (val: string) => {
+    const cleanDigits = val.replace(/\D/g, '').slice(0, 10);
+    setQuickPhone(cleanDigits);
+    setQuickError(null);
+  };
+
+  const handleSendOtp = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const targetPhone = quickPhone.trim().replace(/\D/g, '');
+    setQuickError(null);
+    if (!targetPhone || targetPhone.length < 10) {
+      setQuickError(lang === 'te' ? 'దయచేసి సరైన 10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి' : 'Please enter a valid 10-digit mobile number');
+      return;
+    }
+
+    setQuickPhoneLoading(true);
+    try {
+      const res = await api.farmerLogin('phone', targetPhone);
+      setOtpSent(true);
+      setReceivedOtp(res.devOtp || '123456');
+      setQuickOtp('');
+      showToast(lang === 'te' ? `+91 ${targetPhone} కు OTP పంపబడింది!` : `OTP sent to +91 ${targetPhone}!`);
+    } catch (err: any) {
+      setQuickError(err.message || (lang === 'te' ? 'OTP పంపడం విఫలమైంది' : 'Failed to send OTP'));
+    } finally {
+      setQuickPhoneLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const targetPhone = quickPhone.trim().replace(/\D/g, '');
+    const cleanOtp = quickOtp.trim();
+    setQuickError(null);
+
+    if (!cleanOtp) {
+      setQuickError(lang === 'te' ? 'దయచేసి OTP నమోదు చేయండి' : 'Please enter the OTP');
+      return;
+    }
+
+    setQuickPhoneLoading(true);
+    try {
+      const res = await api.verifyFarmerOtp(targetPhone, cleanOtp);
+      if (res.token && res.farmer) {
+        setStoredAuth(res.token, res.farmer);
+        if (onLoginSuccess) {
+          onLoginSuccess(res.farmer);
+        }
+        showToast(lang === 'te' ? `స్వాగతం, ${res.farmer.name}! లాగిన్ విజయవంతమైంది` : `👋 Welcome, ${res.farmer.name}! Login successful`);
+        setTimeout(() => onNavigate('farmer-dashboard'), 350);
+      }
+    } catch (err: any) {
+      setQuickError(err.message || (lang === 'te' ? 'తప్పు OTP. దయచేసి మళ్ళీ ప్రయత్నించండి.' : 'Invalid OTP. Please check the code and try again.'));
+    } finally {
+      setQuickPhoneLoading(false);
+    }
+  };
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -120,19 +181,6 @@ export const Home: React.FC<HomeProps> = ({ lang, setLang, onNavigate, showToast
         <div className="nav-tagline">{t.tagline}</div>
 
         <div className="language-switcher">
-          <button
-            type="button"
-            className="lang-btn"
-            style={{
-              background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.35), rgba(56, 189, 248, 0.35))',
-              borderColor: 'rgba(96, 165, 250, 0.6)',
-              color: '#dbeafe',
-              fontWeight: 900
-            }}
-            onClick={() => onNavigate('glassmorphism')}
-          >
-            ✨ Glassmorphism UI
-          </button>
           <button className="lang-btn" type="button" onClick={() => setLangMenuOpen(!langMenuOpen)}>
             🌐 <span>{lang === 'te' ? 'తెలుగు' : 'English'}</span> ▾
           </button>
@@ -202,7 +250,7 @@ export const Home: React.FC<HomeProps> = ({ lang, setLang, onNavigate, showToast
           </div>
         </section>
 
-        {/* Hero Section with 3 Auto-Changing Background Images (2.5s) */}
+        {/* Hero Section */}
         <section className="hero" id="home">
           <div className="hero-photo-wrap">
             {IMAGES.map((imgSrc, idx) => (
@@ -250,15 +298,245 @@ export const Home: React.FC<HomeProps> = ({ lang, setLang, onNavigate, showToast
             </div>
 
             <div className="quick-login-panel">
-              <div className="quick-login-icon">♙</div>
-              <div className="quick-login-title">{t.quickLogin}</div>
-              <p>{t.accessYourAccount}</p>
-              <button type="button" className="quick-login-btn farmer" onClick={() => onNavigate('farmer-login')}>
-                <span>👨‍🌾</span> {t.farmerLogin} <strong>→</strong>
-              </button>
-              <button type="button" className="quick-login-btn admin" onClick={() => onNavigate('admin-login')}>
-                <span>🛡️</span> {t.adminLogin} <strong>→</strong>
-              </button>
+              {/* Tab Selector: Quick Phone Sign vs Admin */}
+              <div className="quick-sign-tabs">
+                <button
+                  type="button"
+                  className={`quick-sign-tab ${quickTab === 'phone' ? 'active' : ''}`}
+                  onClick={() => { setQuickTab('phone'); setQuickError(null); }}
+                >
+                  📱 {lang === 'te' ? 'రైతు లాగిన్ (OTP)' : 'Farmer Login (OTP)'}
+                </button>
+                <button
+                  type="button"
+                  className={`quick-sign-tab ${quickTab === 'admin' ? 'active' : ''}`}
+                  onClick={() => { setQuickTab('admin'); setQuickError(null); }}
+                >
+                  🛡️ {lang === 'te' ? 'అడ్మిన్ పోర్టల్' : 'Admin Portal'}
+                </button>
+              </div>
+
+              {quickTab === 'phone' ? (
+                <div>
+                  {!otpSent ? (
+                    /* Step 1: Enter Phone Number and Request OTP */
+                    <form onSubmit={handleSendOtp}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2px' }}>
+                        <h3 style={{ fontSize: '18px', fontWeight: 900, color: '#0c5b38', margin: 0 }}>
+                          📱 {lang === 'te' ? 'మొబైల్ నంబర్‌తో సైన్-ఇన్' : 'Sign In with Phone'}
+                        </h3>
+                        <span style={{ fontSize: '11px', background: '#dcfce7', color: '#15803d', fontWeight: 800, padding: '2px 8px', borderRadius: '12px', border: '1px solid #86efac' }}>
+                          🔒 {lang === 'te' ? 'OTP అవసరం' : 'OTP Required'}
+                        </span>
+                      </div>
+                      <p style={{ fontSize: '12px', color: '#527964', margin: '2px 0 10px' }}>
+                        {lang === 'te'
+                          ? 'మీ 10 అంకెల మొబైల్ నంబర్ నమోదు చేసి OTP పొందండి'
+                          : 'Enter 10-digit mobile number to receive OTP'}
+                      </p>
+
+                      {quickError && <div className="quick-sign-error">{quickError}</div>}
+
+                      {/* Phone Input Box */}
+                      <div className="quick-sign-input-wrap">
+                        <span className="quick-sign-flag">🇮🇳 +91</span>
+                        <input
+                          type="tel"
+                          className="quick-sign-input"
+                          placeholder={lang === 'te' ? '10 అంకెల మొబైల్ నంబర్' : '10-digit mobile number'}
+                          maxLength={10}
+                          value={quickPhone}
+                          onChange={(e) => handlePhoneInputChange(e.target.value)}
+                          autoFocus
+                        />
+                        {quickPhone && (
+                          <button
+                            type="button"
+                            onClick={() => setQuickPhone('')}
+                            style={{ border: 0, background: 'transparent', color: '#94a3b8', fontSize: '14px', cursor: 'pointer' }}
+                            title="Clear"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Send OTP Button */}
+                      <button
+                        type="submit"
+                        className="quick-sign-btn-action"
+                        disabled={quickPhoneLoading}
+                      >
+                        {quickPhoneLoading ? (
+                          <span>⏳ {lang === 'te' ? 'OTP పంపబడుతోంది...' : 'Sending OTP...'}</span>
+                        ) : (
+                          <>
+                            <span>✉️ {lang === 'te' ? 'OTP పొందండి' : 'Send OTP'}</span>
+                            <strong style={{ fontSize: '16px' }}>→</strong>
+                          </>
+                        )}
+                      </button>
+
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px', fontSize: '11px' }}>
+                        <span style={{ color: '#15803d', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                          🛡️ {lang === 'te' ? 'సురక్షిత OTP ధృవీకరణ' : 'Secure OTP verification required'}
+                        </span>
+                        <button
+                          type="button"
+                          style={{ border: 0, background: 'transparent', color: '#475569', fontWeight: 700, cursor: 'pointer', padding: 0 }}
+                          onClick={() => onNavigate('farmer-login')}
+                        >
+                          {lang === 'te' ? 'పూర్తి పోర్టల్ →' : 'Full portal →'}
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
+                    /* Step 2: Enter and Verify OTP */
+                    <form onSubmit={handleVerifyOtp}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2px' }}>
+                        <h3 style={{ fontSize: '18px', fontWeight: 900, color: '#0c5b38', margin: 0 }}>
+                          🔐 {lang === 'te' ? 'OTP ధృవీకరణ' : 'Verify OTP'}
+                        </h3>
+                        <span style={{ fontSize: '11px', background: '#e0f2fe', color: '#0369a1', fontWeight: 800, padding: '2px 8px', borderRadius: '12px', border: '1px solid #bae6fd' }}>
+                          📱 +91 {quickPhone}
+                        </span>
+                      </div>
+                      <p style={{ fontSize: '12px', color: '#527964', margin: '2px 0 8px' }}>
+                        {lang === 'te'
+                          ? `+91 ${quickPhone} కు పంపబడిన 6 అంకెల OTP ని నమోదు చేయండి`
+                          : `Enter the 6-digit OTP sent to +91 ${quickPhone}`}
+                      </p>
+
+                      {/* Demo OTP Notice Box */}
+                      <div style={{
+                        background: '#f0fdf4',
+                        border: '1px dashed #86efac',
+                        borderRadius: '10px',
+                        padding: '8px 12px',
+                        marginBottom: '10px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        fontSize: '12px'
+                      }}>
+                        <div>
+                          <span style={{ color: '#166534', fontWeight: 700 }}>
+                            {lang === 'te' ? 'డెమో SMS OTP:' : 'Demo SMS OTP:'}
+                          </span>{' '}
+                          <b style={{ color: '#15803d', fontSize: '15px', letterSpacing: '2px', fontFamily: 'monospace' }}>
+                            {receivedOtp || '123456'}
+                          </b>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setQuickOtp(receivedOtp || '123456')}
+                          style={{
+                            border: '1px solid #86efac',
+                            background: '#ffffff',
+                            color: '#15803d',
+                            fontSize: '11px',
+                            fontWeight: 800,
+                            borderRadius: '6px',
+                            padding: '3px 8px',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {lang === 'te' ? 'స్వయంచాలకంగా పూరించండి' : 'Auto-Fill'}
+                        </button>
+                      </div>
+
+                      {quickError && <div className="quick-sign-error">{quickError}</div>}
+
+                      {/* OTP Input Box */}
+                      <div className="quick-sign-input-wrap">
+                        <span style={{ fontSize: '16px', paddingRight: '8px', borderRight: '1px solid #c2e2cc', marginRight: '8px' }}>🔑</span>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          className="quick-sign-input"
+                          placeholder="Enter 6-digit OTP (e.g. 123456)"
+                          maxLength={6}
+                          value={quickOtp}
+                          onChange={(e) => {
+                            setQuickOtp(e.target.value.replace(/\D/g, '').slice(0, 6));
+                            setQuickError(null);
+                          }}
+                          autoFocus
+                          style={{ letterSpacing: '4px', fontSize: '16px', fontWeight: 800 }}
+                        />
+                        {quickOtp && (
+                          <button
+                            type="button"
+                            onClick={() => setQuickOtp('')}
+                            style={{ border: 0, background: 'transparent', color: '#94a3b8', fontSize: '14px', cursor: 'pointer' }}
+                            title="Clear"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Verify Button */}
+                      <button
+                        type="submit"
+                        className="quick-sign-btn-action"
+                        disabled={quickPhoneLoading}
+                      >
+                        {quickPhoneLoading ? (
+                          <span>⏳ {lang === 'te' ? 'ధృవీకరిస్తోంది...' : 'Verifying OTP...'}</span>
+                        ) : (
+                          <>
+                            <span>🔓 {lang === 'te' ? 'OTP ధృవీకరించి లాగిన్' : 'Verify OTP & Sign In'}</span>
+                            <strong style={{ fontSize: '16px' }}>✓</strong>
+                          </>
+                        )}
+                      </button>
+
+                      {/* Navigation between steps */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px', fontSize: '12px' }}>
+                        <button
+                          type="button"
+                          style={{ border: 0, background: 'transparent', color: '#475569', fontWeight: 700, cursor: 'pointer', padding: 0 }}
+                          onClick={() => { setOtpSent(false); setQuickError(null); }}
+                        >
+                          ← {lang === 'te' ? 'నంబర్ మార్చండి' : 'Change Phone'}
+                        </button>
+                        <button
+                          type="button"
+                          style={{ border: 0, background: 'transparent', color: '#15803d', fontWeight: 800, cursor: 'pointer', padding: 0 }}
+                          onClick={() => handleSendOtp()}
+                          disabled={quickPhoneLoading}
+                        >
+                          🔄 {lang === 'te' ? 'మళ్ళీ పంపండి' : 'Resend OTP'}
+                        </button>
+                      </div>
+                    </form>
+                  )}
+                </div>
+              ) : (
+                /* Admin Tab */
+                <div>
+                  <h3 style={{ fontSize: '18px', fontWeight: 900, color: '#1e3a8a', margin: '0 0 4px' }}>
+                    🛡️ {lang === 'te' ? 'అడ్మినిస్ట్రేటర్ పోర్టల్' : 'Administrator Portal'}
+                  </h3>
+                  <p style={{ fontSize: '12px', color: '#475569', margin: '0 0 14px' }}>
+                    {lang === 'te'
+                      ? 'మండి రేట్లు, హెచ్చరికలు మరియు రైతుల డేటా నిర్వహణ'
+                      : 'Authorized personnel for mandi rates, system alerts & farmer records'}
+                  </p>
+                  <button
+                    type="button"
+                    className="quick-login-btn admin"
+                    onClick={() => onNavigate('admin-login')}
+                    style={{ margin: '0 0 10px' }}
+                  >
+                    <span>🛡️</span> {lang === 'te' ? 'అడ్మిన్ లాగిన్ పేజీ' : 'Open Admin Login'} <strong>→</strong>
+                  </button>
+                  <div style={{ fontSize: '11px', color: '#64748b', textAlign: 'center' }}>
+                    Default demo: <b>admin@agriraksha.demo</b> / <b>admin123</b>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

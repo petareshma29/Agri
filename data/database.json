@@ -79,6 +79,78 @@
       "joined_date": "20 May 2026",
       "created_at": "2026-05-20T09:15:00.000Z",
       "updated_at": "2026-05-20T09:15:00.000Z"
+    },
+    {
+      "id": "F003",
+      "farmer_id": "F003",
+      "user_id": "U_1791018934738",
+      "name": "Farmer 6789",
+      "phone": "8880056789",
+      "aadhaar_number": "",
+      "email": "",
+      "village": "Rural Farm Cluster",
+      "district": "Telangana Central",
+      "state": "Telangana",
+      "land_area": "2.0 acres",
+      "soil_type": "Loamy Soil",
+      "irrigation_type": "Borewell / Drip",
+      "joined_date": "3 October 2026",
+      "created_at": "2026-10-03T09:15:34.738Z",
+      "updated_at": "2026-10-03T09:15:34.738Z"
+    },
+    {
+      "id": "F004",
+      "farmer_id": "F004",
+      "user_id": "U_1791019228314",
+      "name": "Farmer 7899",
+      "phone": "1234567899",
+      "aadhaar_number": "",
+      "email": "",
+      "village": "Warangal Rural",
+      "district": "Warangal",
+      "state": "Telangana",
+      "land_area": "3.5 acres",
+      "soil_type": "Red Sandy Loam",
+      "irrigation_type": "Borewell / Drip",
+      "joined_date": "3 October 2026",
+      "created_at": "2026-10-03T09:20:28.314Z",
+      "updated_at": "2026-10-03T09:20:28.314Z"
+    },
+    {
+      "id": "F005",
+      "farmer_id": "F005",
+      "user_id": "U_1791019650218",
+      "name": "Farmer 2233",
+      "phone": "9440112233",
+      "aadhaar_number": "",
+      "email": "",
+      "village": "Warangal Rural",
+      "district": "Warangal",
+      "state": "Telangana",
+      "land_area": "3.5 acres",
+      "soil_type": "Red Sandy Loam",
+      "irrigation_type": "Borewell / Drip",
+      "joined_date": "3 October 2026",
+      "created_at": "2026-10-03T09:27:30.218Z",
+      "updated_at": "2026-10-03T09:27:30.218Z"
+    },
+    {
+      "id": "F006",
+      "farmer_id": "F006",
+      "user_id": "U_1791020074071",
+      "name": "Farmer 3344",
+      "phone": "9911223344",
+      "aadhaar_number": "",
+      "email": "",
+      "village": "Warangal Rural",
+      "district": "Warangal",
+      "state": "Telangana",
+      "land_area": "3.5 acres",
+      "soil_type": "Red Sandy Loam",
+      "irrigation_type": "Borewell / Drip",
+      "joined_date": "3 October 2026",
+      "created_at": "2026-10-03T09:34:34.071Z",
+      "updated_at": "2026-10-03T09:34:34.071Z"
     }
   ],
   "crops": [
@@ -165,6 +237,34 @@
       "id": "C006",
       "created_at": "2026-09-24T05:29:24.925Z",
       "updated_at": "2026-09-24T05:29:24.925Z"
+    },
+    {
+      "farmer_id": "F005",
+      "crop_name": "Rice (Paddy)",
+      "area": "2.0 acres",
+      "stage": "Tillering",
+      "health": "Good",
+      "season": "Kharif",
+      "status": "Healthy",
+      "icon": "🌾",
+      "planting_date": "15 June 2026",
+      "id": "C007",
+      "created_at": "2026-10-03T09:27:30.225Z",
+      "updated_at": "2026-10-03T09:27:30.225Z"
+    },
+    {
+      "farmer_id": "F006",
+      "crop_name": "Rice (Paddy)",
+      "area": "2.0 acres",
+      "stage": "Tillering",
+      "health": "Good",
+      "season": "Kharif",
+      "status": "Healthy",
+      "icon": "🌾",
+      "planting_date": "15 June 2026",
+      "id": "C008",
+      "created_at": "2026-10-03T09:34:34.079Z",
+      "updated_at": "2026-10-03T09:34:34.079Z"
     }
   ],
   "crop_scans": [
@@ -395,5 +495,18 @@
       "created_at": "2026-09-23T09:00:00.000Z"
     }
   ],
-  "otps": []
+  "otps": [
+    {
+      "identifier": "9876543210",
+      "otp_hash": "$2b$08$rADeJJzvEx5k2xbytzmwBuWgO0GzBD/L52JNqcVewzuL3pFZuijg.",
+      "expires_at": 1791020667260,
+      "attempts": 0
+    },
+    {
+      "identifier": "8880056789",
+      "otp_hash": "$2b$08$e8Qa7h0ix1aptUsHwbIDJ.D1wNnOfYoVF1qkP8HFPr8Se8DZzxqce",
+      "expires_at": 1791019534804,
+      "attempts": 0
+    }
+  ]
 }

@@ -7,7 +7,6 @@ import { AdminDashboard } from './components/AdminDashboard.tsx';
 import { SoilDetails } from './components/SoilDetails.tsx';
 import { WeatherDetails } from './components/WeatherDetails.tsx';
 import { CropRateDetails } from './components/CropRateDetails.tsx';
-import { GlassmorphismShowcase } from './components/GlassmorphismShowcase.tsx';
 import { api, getStoredUser } from './api.ts';
 import { Farmer, AdminUser } from './types.ts';
 
@@ -18,7 +17,7 @@ export default function App() {
 
   const [currentRoute, setCurrentRoute] = useState<string>(() => {
     const hash = window.location.hash.replace('#', '');
-    if (['farmer-login', 'admin-login', 'farmer-dashboard', 'admin-dashboard', 'soil', 'weather', 'crop-rate', 'glassmorphism', 'home'].includes(hash)) {
+    if (['farmer-login', 'admin-login', 'farmer-dashboard', 'admin-dashboard', 'soil', 'weather', 'crop-rate', 'home'].includes(hash)) {
       return hash;
     }
     return 'home';
@@ -57,7 +56,7 @@ export default function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '');
-      if (hash && ['farmer-login', 'admin-login', 'farmer-dashboard', 'admin-dashboard', 'soil', 'weather', 'crop-rate', 'glassmorphism', 'home'].includes(hash)) {
+      if (hash && ['farmer-login', 'admin-login', 'farmer-dashboard', 'admin-dashboard', 'soil', 'weather', 'crop-rate', 'home'].includes(hash)) {
         setCurrentRoute(hash);
       } else if (!hash) {
         setCurrentRoute('home');
@@ -97,6 +96,9 @@ export default function App() {
           setLang={setLang}
           onNavigate={navigateTo}
           showToast={showToast}
+          onLoginSuccess={(farmer) => {
+            setCurrentFarmer(farmer);
+          }}
         />
       )}
 
@@ -189,18 +191,6 @@ export default function App() {
           lang={lang}
           setLang={setLang}
           onNavigate={navigateTo}
-        />
-      )}
-
-      {currentRoute === 'glassmorphism' && (
-        <GlassmorphismShowcase
-          lang={lang}
-          farmer={currentFarmer}
-          onNavigate={navigateTo}
-          showToast={showToast}
-          onLoginSuccess={(farmer) => {
-            setCurrentFarmer(farmer);
-          }}
         />
       )}
     </div>
