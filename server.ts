@@ -984,8 +984,16 @@ app.post('/api/firebase/sync', async (req: Request, res: Response) => {
   }
 });
 
-// Serve Vite dev server or static dist in production
+// Export express app for serverless deployment (Vercel)
+export { app };
+export default app;
+
+// Serve Vite dev server or static dist in production (when not running as a Vercel serverless function)
 async function startServer() {
+  if (process.env.VERCEL) {
+    return;
+  }
+
   if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.resolve(__dirname, 'dist')));
     app.get('*', (req, res) => {

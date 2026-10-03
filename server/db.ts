@@ -141,7 +141,8 @@ export interface DatabaseSchema {
   otps: OtpRecord[];
 }
 
-const DB_DIR = path.resolve(process.cwd(), 'data');
+const isVercel = !!process.env.VERCEL;
+const DB_DIR = isVercel ? path.resolve('/tmp', 'data') : path.resolve(process.cwd(), 'data');
 const DB_FILE = path.resolve(DB_DIR, 'database.json');
 
 function getInitialData(): DatabaseSchema {
@@ -527,21 +528,20 @@ class Database {
   private data: DatabaseSchema;
 
   constructor() {
-    if (!fs.existsSync(DB_DIR)) {
-      fs.mkdirSync(DB_DIR, { recursive: true });
-    }
-    if (fs.existsSync(DB_FILE)) {
-      try {
+    try {
+      if (!fs.existsSync(DB_DIR)) {
+        fs.mkdirSync(DB_DIR, { recursive: true });
+      }
+      if (fs.existsSync(DB_FILE)) {
         const raw = fs.readFileSync(DB_FILE, 'utf-8');
         this.data = JSON.parse(raw);
-      } catch (err) {
-        console.error('Failed to parse database.json, initializing fresh data', err);
+      } else {
         this.data = getInitialData();
         this.save();
       }
-    } else {
+    } catch (err) {
+      console.warn('Filesystem init warning (running in in-memory mode):', err);
       this.data = getInitialData();
-      this.save();
     }
 
     // Automatically ensure all local data is seeded to Firestore
